@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aku running club marathon registration 2026</title>
+  <style>
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f7f6; margin: 0; padding: 15px; }
+    .container { max-width: 550px; background: #ffffff; padding: 25px; border-radius: 12px; margin: auto; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+    .banner-img, .qr-img { width: 100%; border-radius: 8px; margin-bottom: 15px; }
+    .qr-img { max-width: 250px; display: block; margin: 10px auto; }
+    h2 { text-align: center; color: #1e3a8a; margin-top: 0; }
+    .info-header { text-align: center; background: #dbeafe; color: #1e40af; padding: 12px; border-radius: 8px; font-weight: bold; margin-bottom: 15px; line-height: 1.5; }
+    .deadline-notice { background: #fee2e2; color: #dc2626; text-align: center; padding: 8px; border-radius: 6px; font-weight: bold; margin-bottom: 20px; }
+    label { font-weight: 600; display: block; margin-top: 15px; color: #334155; }
+    input[type="text"], input[type="tel"], input[type="email"], input[type="date"], select, textarea { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; }
+    .radio-group { display: flex; gap: 20px; margin-top: 8px; }
+    .payment-box { background: #fef3c7; border: 2px dashed #f59e0b; padding: 15px; border-radius: 8px; margin-top: 20px; text-align: center; }
+    .upi-btn { background: #d97706; color: white; padding: 10px 18px; text-decoration: none; border-radius: 6px; display: inline-block; font-weight: bold; margin-top: 10px; }
+    button[type="submit"] { width: 100%; padding: 14px; background: #2563eb; color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; margin-top: 25px; cursor: pointer; }
+    button:disabled { background: #94a3b8; }
+    #status { margin-top: 15px; text-align: center; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <img src="marathon poster.jpeg" alt="Marathon Poster" class="banner-img">
+  
+  <h2>AKU Running Club</h2>
+  <div class="info-header">
+    முதலாம் ஆண்டு நடத்தும் மாபெரும் மாரத்தான் போட்டி<br>
+    இடம்: அரசு மேல்நிலைப்பள்ளி பள்ளத்தூர்<br>
+    தேதி: 01/11/2026
+  </div>
+
+  <div class="deadline-notice">
+    Last Day for Registration: 26/10/2026
+  </div>
+
+  <form id="regForm">
+    <label>1. பெயர் (Name) *</label>
+    <input type="text" id="name" required placeholder="உங்கள் முழு பெயர்">
+
+    <label>2. வாட்ஸ்அப் எண் (WhatsApp Number) *</label>
+    <input type="tel" id="phone" pattern="[0-9]{10}" required placeholder="10 இலக்க மொபைல் எண்">
+
+    <label>3. பாலினம் (Gender) *</label>
+    <div class="radio-group">
+      <label><input type="radio" name="gender" value="ஆண்" required onclick="filterCategories()"> ஆண் (Male)</label>
+      <label><input type="radio" name="gender" value="பெண்" onclick="filterCategories()"> பெண் (Female)</label>
+    </div>
+
+    <label>4. பிறந்த தேதி (Date of Birth) *</label>
+    <input type="date" id="dob" required onchange="calculateAge()">
+
+    <label>வயது (Age - தானாக கணக்கிடப்படும்)</label>
+    <input type="text" id="age" readonly placeholder="வயது">
+
+    <label>5. பிரிவு (Category - கட்டணம்: ₹250) *</label>
+    <select id="category" required>
+      <option value="">பிரிவைத் தேர்ந்தெடுக்கவும்</option>
+      <option value="5 to 12 years - 2km" class="cat-opt">5 முதல் 12 வயது - 2 கி.மீ (2km)</option>
+      <option value="13 to 17 years - 5km" class="cat-opt">13 முதல் 17 வயது - 5 கி.மீ (5km)</option>
+      <option value="18+ Open Female - 8km" class="cat-opt female-only">18+ Open Female - 8 கி.மீ (8km)</option>
+      <option value="18 to 35 years Male - 10km" class="cat-opt male-only">18 முதல் 35 வயது - ஆண் மட்டும் - 10 கி.மீ (10km)</option>
+    </select>
+
+    <label>6. மின்னஞ்சல் (Gmail) *</label>
+    <input type="email" id="email" required placeholder="example@gmail.com">
+
+    <label>7. இரத்த வகை (Blood Group) *</label>
+    <select id="bloodGroup" required>
+      <option value="">இரத்த வகையைத் தேர்ந்தெடுக்கவும்</option>
+      <option value="A+">A+</option><option value="A-">A-</option>
+      <option value="B+">B+</option><option value="B-">B-</option>
+      <option value="O+">O+</option><option value="O-">O-</option>
+      <option value="AB+">AB+</option><option value="AB-">AB-</option>
+    </select>
+
+    <label>8. ஆதார் எண் (Aadhaar Card Number) *</label>
+    <input type="text" id="aadhaar" pattern="[0-9]{12}" required placeholder="12 இலக்க ஆதார் எண்">
+
+    <label>9. முகவரி (Address) *</label>
+    <textarea id="address" rows="3" required placeholder="தெரு, நகரம், மாநிலம், அஞ்சல் குறியீடு"></textarea>
+
+    <!-- Payment Section -->
+    <div class="payment-box">
+      <strong>கட்டணம்: ₹250</strong><br><br>
+      <a href="upi://pay?pa=msddineshp2004@okhdfcbank&pn=AKU%20Running%20Club&am=250&cu=INR" class="upi-btn">
+        📲 UPI ஆப் மூலம் செலுத்த கிளிக் செய்க
+      </a>
+      <br><br>
+      <span>அல்லது QR Code-ஐ ஸ்கேன் செய்யவும்:</span><br>
+      <img src="UPI_RL.jpeg" alt="UPI QR Code" class="qr-img">
+      <code>UPI ID: msddineshp2004@okhdfcbank</code>
+    </div>
+
+    <label style="margin-top:20px;">10. கட்டணம் செலுத்திய ஸ்கிரீன்ஷாட் (Payment Proof Upload) *</label>
+    <input type="file" id="paymentFile" accept="image/*" required>
+
+    <label style="margin-top:20px;">11. நான் வழங்கிய தகவல்கள் அனைத்தும் சரியானவை என்பதை உறுதிப்படுத்துகிறேன் *</label>
+    <div class="radio-group">
+      <label><input type="radio" name="declaration" value="ஆம்" required> ஆம்</label>
+      <label><input type="radio" name="declaration" value="இல்லை"> இல்லை</label>
+    </div>
+
+    <label style="margin-top:15px;">12. நிகழ்ச்சி ஏற்பாட்டாளர்களின் விதிமுறைகள் மற்றும் பாதுகாப்பு வழிமுறைகளைப் பின்பற்றுவேன் *</label>
+    <div class="radio-group">
+      <label><input type="radio" name="terms" value="ஒப்புக்கொள்கிறேன்" required> ஒப்புக்கொள்கிறேன்</label>
+    </div>
+
+    <button type="submit" id="submitBtn">பதிவு செய் (Submit)</button>
+  </form>
+
+  <div id="status"></div>
+</div>
+
+<script>
+  const SCRIPT_URL = "YOUR_DEPLOYED_WEB_APP_URL_HERE";
+
+  function filterCategories() {
+    const gender = document.querySelector('input[name="gender"]:checked').value;
+    const femaleOpt = document.querySelector('.female-only');
+    const maleOpt = document.querySelector('.male-only');
+
+    if (gender === "ஆண்") {
+      femaleOpt.style.display = "none";
+      maleOpt.style.display = "block";
+    } else {
+      femaleOpt.style.display = "block";
+      maleOpt.style.display = "none";
+    }
+  }
+
+  function calculateAge() {
+    const dobInput = document.getElementById('dob').value;
+    if (dobInput) {
+      const dob = new Date(dobInput);
+      const diff_ms = Date.now() - dob.getTime();
+      const age_dt = new Date(diff_ms);
+      const calculatedAge = Math.abs(age_dt.getUTCFullYear() - 1970);
+      document.getElementById('age').value = calculatedAge + " Years";
+    }
+  }
+
+  // Image Compression and Form Submission
+  document.getElementById('regForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const submitBtn = document.getElementById('submitBtn');
+    const statusDiv = document.getElementById('status');
+    const fileInput = document.getElementById('paymentFile').files[0];
+
+    if (!fileInput) {
+      alert("தயவுசெய்து கட்டண ஸ்கிரீன்ஷாட்டைப் பதிவேற்றவும்.");
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.innerText = "பதிவு செய்யப்படுகிறது...";
+    statusDiv.innerText = "";
+
+    const img = new Image();
+    const reader = new FileReader();
+
+    reader.onload = function(evt) {
+      img.src = evt.target.result;
+      img.onload = function() {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        const maxWidth = 800;
+        let width = img.width;
+        let height = img.height;
+
+        if (width > maxWidth) {
+          height = (maxWidth / width) * height;
+          width = maxWidth;
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        ctx.drawImage(img, 0, 0, width, height);
+
+        const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
+
+        const payload = {
+          name: document.getElementById('name').value,
+          phone: document.getElementById('phone').value,
+          gender: document.querySelector('input[name="gender"]:checked').value,
+          dob: document.getElementById('dob').value,
+          age: document.getElementById('age').value,
+          category: document.getElementById('category').value,
+          email: document.getElementById('email').value,
+          bloodGroup: document.getElementById('bloodGroup').value,
+          aadhaar: document.getElementById('aadhaar').value,
+          address: document.getElementById('address').value,
+          declaration: document.querySelector('input[name="declaration"]:checked').value,
+          terms: document.querySelector('input[name="terms"]:checked').value,
+          fileData: compressedDataUrl
+        };
+
+        fetch(SCRIPT_URL, {
+          method: 'POST',
+          body: JSON.stringify(payload)
+        })
+        .then(res => res.json())
+        .then(res => {
+          if (res.result === "success") {
+            statusDiv.style.color = "green";
+            statusDiv.innerHTML = "✓ பதிவு வெற்றிகரமாக முடிந்தது! பதிவு எண்: " + res.regNum + "<br>உறுதிப்படுத்தல் மின்னஞ்சல் உங்கள் Gmail-க்கு அனுப்பப்பட்டுள்ளது.<br><br><a href='https://chat.whatsapp.com/FtQb106zYucEZ1YHei1k1b' target='_blank' style='color:#2563eb; font-weight:bold;'>📲 வாட்ஸ்அப் குழுவில் இணைய கிளிக் செய்யவும்</a>";
+            document.getElementById('regForm').reset();
+          } else {
+            statusDiv.style.color = "red";
+            statusDiv.innerText = "பிழை ஏற்பட்டது. மீண்டும் முயற்சிக்கவும்.";
+          }
+          submitBtn.disabled = false;
+          submitBtn.innerText = "பதிவு செய் (Submit)";
+        })
+        .catch(() => {
+          statusDiv.style.color = "red";
+          statusDiv.innerText = "பிழை ஏற்பட்டது. மீண்டும் முயற்சிக்கவும்.";
+          submitBtn.disabled = false;
+          submitBtn.innerText = "பதிவு செய் (Submit)";
+        });
+      };
+    };
+    reader.readAsDataURL(fileInput);
+  });
+</script>
+
+</body>
+</html>
