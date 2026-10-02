@@ -25,6 +25,7 @@
 <body>
 
 <div class="container">
+  <!-- Image Extension .png is matched correctly -->
   <img src="marathon poster.png" alt="Marathon Poster" class="banner-img">
   
   <h2>AKU Running Club</h2>
@@ -63,7 +64,7 @@
       <option value="5 to 12 years - 2km" class="cat-opt">5 முதல் 12 வயது - 2 கி.மீ (2km)</option>
       <option value="13 to 17 years - 5km" class="cat-opt">13 முதல் 17 வயது - 5 கி.மீ (5km)</option>
       <option value="18+ Open Female - 8km" class="cat-opt female-only">18+ Open Female - 8 கி.மீ (8km)</option>
-      <option value="18+ open Male - 10km" class="cat-opt male-only">18+ open- ஆண் மட்டும் - 10 கி.மீ (10km)</option>
+      <option value="18 to 35 years Male - 10km" class="cat-opt male-only">18 முதல் 35 வயது - ஆண் மட்டும் - 10 கி.மீ (10km)</option>
     </select>
 
     <label>6. மின்னஞ்சல் (Gmail) *</label>
@@ -117,7 +118,8 @@
 </div>
 
 <script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw4c7IF28Y6hXU-I30oaRjEf7oDy55lAYt1L8oYzLaMbuezSzxD-SIEOnXQejb4OX0IJA/exec";
+  // Google Apps Script-இல் புதுப்பிக்கப்பட்ட Web App URL-ஐ இங்கு மாற்றவும்
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw3cK5CD9v5RQ7Kl1ZlLlsKFt_wDKtsJZuv-NYauZCNWNJfOxeOv7yOm5HBcuMiNVjr/exec";
 
   function filterCategories() {
     const gender = document.querySelector('input[name="gender"]:checked').value;
@@ -144,7 +146,7 @@
     }
   }
 
-  // Image Compression and Form Submission
+  // Image Compression and Form Submission with CORS Handling
   document.getElementById('regForm').addEventListener('submit', function(e) {
     e.preventDefault();
 
@@ -200,8 +202,12 @@
           fileData: compressedDataUrl
         };
 
+        // CORS pre-flight சிக்கல்களைத் தவிர்க்க text/plain பயன்படுத்தப்பட்டுள்ளது
         fetch(SCRIPT_URL, {
           method: 'POST',
+          headers: {
+            'Content-Type': 'text/plain;charset=utf-8'
+          },
           body: JSON.stringify(payload)
         })
         .then(res => res.json())
@@ -212,12 +218,13 @@
             document.getElementById('regForm').reset();
           } else {
             statusDiv.style.color = "red";
-            statusDiv.innerText = "பிழை ஏற்பட்டது. மீண்டும் முயற்சிக்கவும்.";
+            statusDiv.innerText = "பிழை ஏற்பட்டது: " + res.error;
           }
           submitBtn.disabled = false;
           submitBtn.innerText = "பதிவு செய் (Submit)";
         })
-        .catch(() => {
+        .catch(err => {
+          console.error("Error:", err);
           statusDiv.style.color = "red";
           statusDiv.innerText = "பிழை ஏற்பட்டது. மீண்டும் முயற்சிக்கவும்.";
           submitBtn.disabled = false;
