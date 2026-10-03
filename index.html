@@ -72,16 +72,17 @@
       display: inline-block; margin-top: 12px; background: #25d366; color: #fff;
       padding: 10px 15px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 13px;
     }
+    .reg-badge {
+      background: #dcfce7; color: #15803d; font-size: 16px; font-weight: bold;
+      padding: 8px; border-radius: 6px; margin: 10px 0; display: block; border: 1px dashed #86efac;
+    }
   </style>
 </head>
 <body>
 
 <div class="form-container">
-  <!-- ========================================== -->
-  <!-- 1. MARATHON POSTER IMAGE SECTION           -->
-  <!-- ========================================== -->
-  <!-- Google Drive-ல் உள்ள உங்கள் படத்தின் FILE_ID-ஐ 'YOUR_GOOGLE_DRIVE_FILE_ID' இடத்தில் மாற்றவும் -->
-  <img src="https://lh3.googleusercontent.com/d/https://script.google.com/macros/s/AKfycbzrxcwcZkhGWeIw-XftaBNcnUjkWP0ldAjToY2Pt1AzO9MPRjnX0YtpzJGukaaO8MSh5g/exec" 
+  <!-- CHANGE 'YOUR_GOOGLE_DRIVE_FILE_ID' TO YOUR IMAGE ID -->
+  <img src="https://lh3.googleusercontent.com/d/https://drive.google.com/file/d/1-THOC6oLea-jIyUTJf0uLbY-gdVysZzQ/view?usp=sharing" 
        alt="AKU Running Club Marathon Poster" class="banner-img" id="posterImg">
 
   <div class="content-padding">
@@ -191,7 +192,8 @@
     </form>
 
     <div id="successBox" class="success-box">
-      <strong>✔ பதிவு வெற்றிகரமாக முடிந்தது!</strong><br><br>
+      <strong>✔ பதிவு வெற்றிகரமாக முடிந்தது!</strong><br>
+      <div id="detailsBadge" class="reg-badge"></div>
       <p id="responseMessage"></p>
       <div id="whatsappContainer"></div>
     </div>
@@ -199,10 +201,7 @@
 </div>
 
 <script>
-  // ==========================================
-  // 2. WEB APP SCRIPT URL SECTION
-  // ==========================================
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzrxcwcZkhGWeIw-XftaBNcnUjkWP0ldAjToY2Pt1AzO9MPRjnX0YtpzJGukaaO8MSh5g/exec";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwrIM7xpfViw6bgufTRZdxG1biPMrhVqUYWZq5vlBgAi2HWs76efNRxg6x2odiNcRpp/exec";
 
   var CATEGORIES = [
     { value: "5-12 Years - 2km",      label: "5 Years to 12 Years - 2km",       min: 5,  max: 12,  gender: "Any" },
@@ -217,19 +216,15 @@
 
   function copyUpiId() {
     var text = $('upiId').innerText;
-    
     function fallback() {
       var ta = document.createElement('textarea');
       ta.value = text;
       document.body.appendChild(ta);
       ta.select();
-      try { 
-        document.execCommand('copy'); 
-      } catch (e) {}
+      try { document.execCommand('copy'); } catch (e) {}
       document.body.removeChild(ta);
       alert('UPI ID பிரதியெடுக்கப்பட்டது: ' + text);
     }
-    
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(text).then(function () {
         alert('UPI ID பிரதியெடுக்கப்பட்டது: ' + text);
@@ -328,14 +323,12 @@
     btn.disabled = true;
     btn.innerText = "சரிபார்க்கப்பட்டு பதிவு செய்யப்படுகிறது...";
 
-    // 1. Google Apps Script சூழலில் இயங்கினால் (google.script.run)
     if (typeof google !== 'undefined' && google.script && google.script.run) {
       google.script.run
         .withSuccessHandler(showSuccess)
         .withFailureHandler(showError)
         .processForm(data);
     } else {
-      // 2. வெளித்தளங்கள் அல்லது நேரடி HTML கோப்பில் இயங்கினால் (Fetch Web App URL)
       fetch(SCRIPT_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -353,12 +346,17 @@
     }
 
     function showSuccess(res) {
-      $('marathonForm').style.display = "none";
-      $('successBox').style.display = "block";
-      $('responseMessage').innerText = res.message;
-      if (res.whatsappLink) {
-        $('whatsappContainer').innerHTML =
-          '<a href="' + res.whatsappLink + '" target="_blank" class="whatsapp-btn">📲 வாட்ஸ்அப் குழுவில் இணைய கிளிக் செய்யவும்</a>';
+      if (res.success) {
+        $('marathonForm').style.display = "none";
+        $('successBox').style.display = "block";
+        $('detailsBadge').innerText = "Reg No: " + res.regNo + " | BIB: " + res.bibNo;
+        $('responseMessage').innerText = res.message;
+        if (res.whatsappLink) {
+          $('whatsappContainer').innerHTML =
+            '<a href="' + res.whatsappLink + '" target="_blank" class="whatsapp-btn">📲 வாட்ஸ்அப் குழுவில் இணைய கிளிக் செய்யவும்</a>';
+        }
+      } else {
+        showError(new Error(res.message));
       }
     }
 
